@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ocean AI Generator V4</title>
+<title>Ocean AI Generator V5</title>
 
 <style>
 body{font-family:Arial;background:#020617;color:#e5e7eb;margin:0;padding:30px}
@@ -14,9 +14,10 @@ select{background:#1e293b;color:white}
 button{cursor:pointer}
 .generate{background:#2563eb;color:white}
 .random{background:#f59e0b;color:white}
-.copy{background:#10b981;color:white;margin-top:10px}
-textarea{width:100%;height:420px;margin-top:10px;background:#020617;color:#22c55e;border-radius:10px;padding:10px;border:none;font-family:monospace}
+.download{background:#10b981;color:white;margin-top:10px}
+textarea{width:100%;height:150px;margin-top:10px;background:#020617;color:#22c55e;border-radius:10px;padding:10px;border:none;font-family:monospace}
 label{font-weight:bold;margin-top:12px;display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
 </style>
 </head>
 
@@ -24,15 +25,15 @@ label{font-weight:bold;margin-top:12px;display:block}
 
 <div class="container">
 
-<h1>🌊 Ocean AI Generator V4</h1>
-<p>3 Prompt Mode: Animal | Human | Hybrid</p>
+<h1>🌊 Ocean AI Generator V5</h1>
+<p>Export 3 Prompt Files (Animal / Human / Hybrid)</p>
 
 <div class="card">
 
 <label>Diver Outfit</label>
 <select id="outfit">
 <option value="a professional black scuba diving suit with oxygen tank and fins">Professional Scuba Suit</option>
-<option value="a tropical diving rash guard and diving shorts">Tropical Diving Outfit</option>
+<option value="a tropical diving rash guard and diving shorts">Tropical Outfit</option>
 <option value="a deep sea exploration suit">Deep Sea Suit</option>
 <option value="a minimalist freediving suit">Freediving Suit</option>
 </select>
@@ -40,65 +41,75 @@ label{font-weight:bold;margin-top:12px;display:block}
 <label>Diver Action</label>
 <select id="action">
 <option value="slowly swimming through the ocean">Swimming</option>
-<option value="exploring an underwater canyon">Exploring Canyon</option>
-<option value="filming marine wildlife with a camera">Filming Wildlife</option>
-<option value="floating calmly in open ocean">Floating</option>
-<option value="approaching something mysterious">Approaching</option>
+<option value="exploring an underwater canyon">Exploring</option>
+<option value="filming marine wildlife">Filming</option>
+<option value="floating calmly">Floating</option>
 </select>
 
-<label>Ocean Location</label>
+<label>Location</label>
 <select id="location">
-<option value="a vibrant tropical coral reef">Coral Reef</option>
-<option value="the deep blue open ocean">Open Ocean</option>
-<option value="a mysterious deep sea trench">Deep Sea Trench</option>
-<option value="a giant underwater canyon">Underwater Canyon</option>
-<option value="a crystal clear tropical lagoon">Blue Lagoon</option>
+<option value="a vibrant coral reef">Coral Reef</option>
+<option value="the deep open ocean">Open Ocean</option>
+<option value="a deep sea trench">Deep Sea</option>
 </select>
 
-<label>Water Conditions</label>
+<label>Water</label>
 <select id="water">
-<option value="crystal clear tropical water">Crystal Clear</option>
-<option value="deep dark ocean water">Deep Dark</option>
-<option value="murky mysterious deep sea water">Murky Deep Sea</option>
-<option value="sunlit shallow tropical water">Sunlit Shallow</option>
+<option value="crystal clear water">Clear</option>
+<option value="dark deep water">Dark</option>
+<option value="murky water">Murky</option>
 </select>
 
-<label>Marine Creature</label>
+<label>Creature</label>
 <select id="animal"></select>
 
-<label>Creature Behavior</label>
+<label>Behavior</label>
 <select id="behavior">
-<option value="slowly emerging from the darkness">Emerging</option>
-<option value="circling curiously">Circling</option>
-<option value="gliding peacefully">Passing</option>
-<option value="approaching slowly">Approaching</option>
-<option value="swimming powerfully">Powerful Swim</option>
+<option value="slowly emerging">Emerging</option>
+<option value="circling">Circling</option>
+<option value="gliding">Gliding</option>
+<option value="approaching">Approaching</option>
 </select>
 
-<label>Cinematic Camera</label>
+<label>Camera</label>
 <select id="camera">
-<option value="a GoPro POV underwater camera">GoPro POV</option>
-<option value="an ultra wide cinematic underwater lens">Ultra Wide</option>
-<option value="a cinematic IMAX underwater camera">IMAX</option>
-<option value="a smooth underwater drone tracking shot">Drone Shot</option>
+<option value="GoPro POV">GoPro</option>
+<option value="cinematic wide lens">Wide</option>
+<option value="IMAX camera">IMAX</option>
 </select>
 
 <label>Lighting</label>
 <select id="lighting">
-<option value="dramatic sunlight rays piercing the water">Sun Rays</option>
-<option value="deep mysterious ocean lighting">Deep Sea Light</option>
-<option value="bright tropical underwater lighting">Tropical Light</option>
+<option value="sun rays">Sun Rays</option>
+<option value="deep ocean light">Deep Light</option>
+<option value="tropical light">Tropical</option>
 </select>
 
-<button class="generate" onclick="generateJSON()">Generate 3 Prompts</button>
-<button class="random" onclick="randomPrompt()">🎲 Random</button>
+<button class="generate" onclick="generate()">Generate</button>
+<button class="random" onclick="randomize()">🎲 Random</button>
 
 </div>
 
+<div class="grid">
+
 <div class="card">
-<label>Generated JSON</label>
-<textarea id="output"></textarea>
-<button class="copy" onclick="copyJSON()">Copy JSON</button>
+<label>Animal Only</label>
+<textarea id="out1"></textarea>
+<button class="download" onclick="downloadFile('animal_only.json', out1.value)">Download</button>
+</div>
+
+<div class="card">
+<label>Human Only</label>
+<textarea id="out2"></textarea>
+<button class="download" onclick="downloadFile('human_only.json', out2.value)">Download</button>
+</div>
+
+<div class="card">
+<label>Hybrid</label>
+<textarea id="out3"></textarea>
+<button class="download" onclick="downloadFile('hybrid.json', out3.value)">Download</button>
+</div>
+
 </div>
 
 </div>
@@ -107,89 +118,74 @@ label{font-weight:bold;margin-top:12px;display:block}
 
 let animalDB={}
 
-// LOAD EXTERNAL JSON
+// LOAD JSON
 fetch("animalDB.json")
 .then(res=>res.json())
 .then(data=>{
-  animalDB=data
-  const select=document.getElementById("animal")
-  Object.keys(animalDB).forEach(name=>{
-    let opt=document.createElement("option")
-    opt.value=name
-    opt.textContent=name
-    select.appendChild(opt)
-  })
+animalDB=data
+Object.keys(data).forEach(name=>{
+let opt=document.createElement("option")
+opt.value=name
+opt.textContent=name
+animal.appendChild(opt)
+})
 })
 
-function generateJSON(){
+function generate(){
 
-const outfit=outfitEl.value
-const action=actionEl.value
-const location=locationEl.value
-const water=waterEl.value
-const animal=animalEl.value
-const behavior=behaviorEl.value
-const camera=cameraEl.value
-const lighting=lightingEl.value
+const human=`A young female ocean explorer with long flowing hair wearing ${outfit.value}`
 
-const animalDesc=animalDB[animal]
+const animalDesc=animalDB[animal.value]
 
-// ✅ CHARACTER CONSISTENT
-const humanCharacter=`A young female ocean explorer with long flowing hair, wearing ${outfit}`
-
-// =======================
-// 1. ANIMAL ONLY
-// =======================
-const animalPrompt=`Ultra realistic cinematic underwater video of ${animalDesc} in ${location}. The environment shows ${water}. The creature is ${behavior}. Shot using ${camera}. Lighting: ${lighting}. Highly detailed marine life, cinematic scale, viral content.`
-
-// =======================
-// 2. HUMAN ONLY
-// =======================
-const humanPrompt=`Ultra realistic cinematic underwater video of ${humanCharacter}. She is ${action} in ${location}. The water is ${water}. No animals present. Focus on calm exploration, bubbles, and cinematic beauty. Shot using ${camera}. Lighting: ${lighting}.`
-
-// =======================
-// 3. HUMAN + ANIMAL
-// =======================
-const hybridPrompt=`Ultra realistic cinematic underwater video of ${humanCharacter}. She is ${action} in ${location}. The water is ${water}. Suddenly a ${animalDesc} appears. The creature is ${behavior}. Massive cinematic contrast between human and creature. Shot using ${camera}. Lighting: ${lighting}. Viral wildlife moment.`
-
-const result={
-  metadata:{
-    generator:"Ocean AI Generator V4",
-    mode:"3 Prompt System"
-  },
-  prompts:{
-    animal_only:animalPrompt,
-    human_only:humanPrompt,
-    hybrid:hybridPrompt
-  }
+// 1
+const p1={
+prompt:`Ultra realistic underwater video of ${animalDesc} in ${location.value}, ${water.value}, ${behavior.value}, shot with ${camera.value}, lighting ${lighting.value}`
 }
 
-output.value=JSON.stringify(result,null,2)
+// 2
+const p2={
+prompt:`Ultra realistic underwater video of ${human}, she is ${action.value} in ${location.value}, ${water.value}, no animals, cinematic calm scene`
 }
 
-function randomPrompt(){
+// 3
+const p3={
+prompt:`Ultra realistic underwater video of ${human}, she is ${action.value} in ${location.value}, ${water.value}, suddenly ${animalDesc} appears, ${behavior.value}, cinematic viral moment`
+}
+
+out1.value=JSON.stringify(p1,null,2)
+out2.value=JSON.stringify(p2,null,2)
+out3.value=JSON.stringify(p3,null,2)
+
+}
+
+function downloadFile(filename, content){
+const blob=new Blob([content],{type:"application/json"})
+const a=document.createElement("a")
+a.href=URL.createObjectURL(blob)
+a.download=filename
+a.click()
+}
+
+function randomize(){
 document.querySelectorAll("select").forEach(s=>{
 s.selectedIndex=Math.floor(Math.random()*s.options.length)
 })
-generateJSON()
-}
-
-function copyJSON(){
-output.select()
-document.execCommand("copy")
-alert("Copied!")
+generate()
 }
 
 // SHORTCUT
-const outfitEl=document.getElementById("outfit")
-const actionEl=document.getElementById("action")
-const locationEl=document.getElementById("location")
-const waterEl=document.getElementById("water")
-const animalEl=document.getElementById("animal")
-const behaviorEl=document.getElementById("behavior")
-const cameraEl=document.getElementById("camera")
-const lightingEl=document.getElementById("lighting")
-const output=document.getElementById("output")
+const outfit=document.getElementById("outfit")
+const action=document.getElementById("action")
+const location=document.getElementById("location")
+const water=document.getElementById("water")
+const animal=document.getElementById("animal")
+const behavior=document.getElementById("behavior")
+const camera=document.getElementById("camera")
+const lighting=document.getElementById("lighting")
+
+const out1=document.getElementById("out1")
+const out2=document.getElementById("out2")
+const out3=document.getElementById("out3")
 
 </script>
 
