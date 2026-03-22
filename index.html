@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ocean AI Generator V3</title>
+
+<style>
+body{font-family:Arial;background:#020617;color:#e5e7eb;margin:0;padding:30px}
+.container{max-width:1200px;margin:auto}
+.card{background:#0f172a;border-radius:14px;padding:24px;margin-bottom:20px;box-shadow:0 10px 25px rgba(0,0,0,0.4)}
+select,input,button{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none;font-size:14px}
+select,input{background:#1e293b;color:white}
+button{cursor:pointer}
+.generate{background:#2563eb;color:white}
+.random{background:#f59e0b;color:white}
+.copy{background:#10b981;color:white;margin-top:10px}
+textarea{width:100%;height:420px;margin-top:10px;background:#020617;color:#22c55e;border-radius:10px;padding:10px;border:none;font-family:monospace}
+label{font-weight:bold;margin-top:12px;display:block}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🌊 Ocean AI Generator V3</h1>
+<p>Create viral giant ocean creature encounters.</p>
+
+<div class="card">
+
+<label>Diver Outfit</label>
+<select id="outfit">
+<option value="a professional black scuba diving suit with oxygen tank and fins">Professional Scuba Suit</option>
+<option value="a tropical diving rash guard and diving shorts">Tropical Diving Outfit</option>
+<option value="a deep sea exploration suit">Deep Sea Suit</option>
+<option value="a minimalist freediving suit">Freediving Suit</option>
+</select>
+
+<label>Diver Action</label>
+<select id="action">
+<option value="slowly swimming through the ocean">Swimming</option>
+<option value="exploring an underwater canyon">Exploring Canyon</option>
+<option value="filming marine wildlife with a camera">Filming Wildlife</option>
+<option value="floating calmly in open ocean">Floating</option>
+<option value="approaching a mysterious creature">Approaching Creature</option>
+</select>
+
+<label>Ocean Location</label>
+<select id="location">
+<option value="a vibrant tropical coral reef">Coral Reef</option>
+<option value="the deep blue open ocean">Open Ocean</option>
+<option value="a mysterious deep sea trench">Deep Sea Trench</option>
+<option value="a giant underwater canyon">Underwater Canyon</option>
+<option value="a crystal clear tropical lagoon">Blue Lagoon</option>
+</select>
+
+<label>Water Conditions</label>
+<select id="water">
+<option value="crystal clear tropical water">Crystal Clear</option>
+<option value="deep dark ocean water">Deep Dark</option>
+<option value="murky mysterious deep sea water">Murky Deep Sea</option>
+<option value="sunlit shallow tropical water">Sunlit Shallow</option>
+</select>
+
+<label>Marine Creature</label>
+<select id="animal"></select>
+
+<label>Creature Size (meters)</label>
+<input type="range" id="size" min="20" max="300" value="80" oninput="sizeValue.innerText=this.value">
+<p>Size: <span id="sizeValue">80</span> meters</p>
+
+<label>Creature Behavior</label>
+<select id="behavior">
+<option value="slowly emerging from the darkness">Emerging</option>
+<option value="circling the diver curiously">Circling</option>
+<option value="gliding past the diver">Passing</option>
+<option value="approaching the diver slowly">Approaching</option>
+<option value="swimming powerfully through the water">Powerful Swim</option>
+</select>
+
+<label>Predator Encounter Mode</label>
+<select id="predator">
+<option value="a calm wildlife encounter">Calm Encounter</option>
+<option value="a tense predator encounter">Predator Encounter</option>
+<option value="an intense dramatic wildlife moment">Dramatic Scene</option>
+</select>
+
+<label>Cinematic Camera</label>
+<select id="camera">
+<option value="a GoPro POV underwater camera">GoPro POV</option>
+<option value="an ultra wide cinematic underwater lens">Ultra Wide</option>
+<option value="a cinematic IMAX underwater camera">IMAX</option>
+<option value="a smooth underwater drone tracking shot">Drone Shot</option>
+<option value="a dramatic orbit camera around the diver">Orbit Camera</option>
+</select>
+
+<label>Environment Effects</label>
+<select id="effects">
+<option value="massive schools of tropical fish surrounding the diver">Fish Swarm</option>
+<option value="floating bubbles and plankton particles">Bubbles</option>
+<option value="glowing bioluminescent particles">Bioluminescence</option>
+<option value="underwater sand clouds and particles">Ocean Particles</option>
+</select>
+
+<label>Lighting</label>
+<select id="lighting">
+<option value="dramatic sunlight rays piercing the water">Sun Rays</option>
+<option value="deep mysterious ocean lighting">Deep Sea Light</option>
+<option value="bright tropical underwater lighting">Tropical Light</option>
+</select>
+
+<label>Video Duration</label>
+<select id="duration">
+<option value="6">6 seconds</option>
+<option value="8">8 seconds</option>
+<option value="12">12 seconds</option>
+<option value="15">15 seconds</option>
+</select>
+
+<label>Cinematic Style</label>
+<select id="style">
+<option value="BBC Planet Earth wildlife documentary">BBC Planet Earth</option>
+<option value="National Geographic underwater documentary">National Geographic</option>
+<option value="epic Hollywood ocean adventure film">Hollywood Ocean</option>
+<option value="IMAX underwater wildlife film">IMAX</option>
+</select>
+
+<button class="generate" onclick="generateJSON()">Generate JSON Prompt</button>
+<button class="random" onclick="randomPrompt()">🎲 Random Viral Scene</button>
+
+</div>
+
+<div class="card">
+
+<label>Generated JSON</label>
+<textarea id="output"></textarea>
+<button class="copy" onclick="copyJSON()">Copy JSON</button>
+
+</div>
+
+</div>
+
+<script>
+
+const animalDB={
+"Blue Whale":"a gigantic blue whale",
+"Whale Shark":"a giant whale shark with spotted body",
+"Giant Squid":"a colossal squid with long tentacles",
+"Great White Shark":"a massive great white shark",
+"Megalodon":"a prehistoric megalodon shark",
+"Manta Ray":"a huge manta ray",
+"Colossal Squid":"a terrifying colossal squid",
+"Giant Octopus":"a giant octopus with massive tentacles",
+"Leviathan Whale":"an ancient leviathan whale",
+"Titan Jellyfish":"a gigantic glowing jellyfish"
+}
+
+const animalSelect=document.getElementById("animal")
+
+Object.keys(animalDB).forEach(name=>{
+let opt=document.createElement("option")
+opt.value=name
+opt.textContent=name
+animalSelect.appendChild(opt)
+})
+
+function generateJSON(){
+
+const outfit=document.getElementById('outfit').value
+const action=document.getElementById('action').value
+const location=document.getElementById('location').value
+const water=document.getElementById('water').value
+const animal=document.getElementById('animal').value
+const animalDesc=animalDB[animal]
+const size=document.getElementById('size').value
+const behavior=document.getElementById('behavior').value
+const predator=document.getElementById('predator').value
+const camera=document.getElementById('camera').value
+const effects=document.getElementById('effects').value
+const lighting=document.getElementById('lighting').value
+const duration=document.getElementById('duration').value
+const style=document.getElementById('style').value
+
+const json={
+
+metadata:{
+title:"Ocean AI Viral Scene",
+generator:"Ocean AI Generator V3"
+},
+
+video_analysis:{
+subject:`A young female ocean explorer wearing ${outfit}`,
+setting:`${location} with ${water}`,
+creature:`A ${size} meter ${animal}`,
+camera:camera
+},
+
+ai_generation_prompt:{
+
+text_to_video_prompt:`Ultra realistic cinematic underwater video of a young female ocean explorer with long hair flowing naturally underwater. She is wearing ${outfit} and is ${action} in ${location}. The water is ${water}. Suddenly a gigantic ${animal} appears. The creature is described as ${animalDesc} and is approximately ${size} meters long, making it tower over the diver in a dramatic scale comparison. The creature is ${behavior}. This moment feels like ${predator}. The camera uses ${camera}. Environmental effects include ${effects}. Lighting condition is ${lighting}. Massive cinematic scale difference between the diver and creature creates a viral wildlife moment. Highly detailed marine life, volumetric sunlight rays, underwater caustics, photorealistic ocean physics. Style: ${style}. Optimized for vertical viral video.`,
+
+negative_prompt:"blurry, low quality, cartoon, unrealistic animals",
+
+technical_specs:{
+aspect_ratio:"9:16",
+resolution:"4K",
+frame_rate:"30fps",
+duration_seconds:Number(duration)
+}
+
+}
+
+}
+
+document.getElementById("output").value=JSON.stringify(json,null,2)
+
+}
+
+function randomPrompt(){
+const selects=document.querySelectorAll("select")
+selects.forEach(s=>{
+s.selectedIndex=Math.floor(Math.random()*s.options.length)
+})
+generateJSON()
+}
+
+function copyJSON(){
+const text=document.getElementById("output")
+text.select()
+document.execCommand("copy")
+alert("JSON copied")
+}
+
+</script>
+
+</body>
+</html>
