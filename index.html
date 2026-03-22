@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ocean AI Generator V4</title>
+
+<style>
+body{font-family:Arial;background:#020617;color:#e5e7eb;margin:0;padding:30px}
+.container{max-width:1200px;margin:auto}
+.card{background:#0f172a;border-radius:14px;padding:24px;margin-bottom:20px;box-shadow:0 10px 25px rgba(0,0,0,0.4)}
+select,button{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none;font-size:14px}
+select{background:#1e293b;color:white}
+button{cursor:pointer}
+.generate{background:#2563eb;color:white}
+.random{background:#f59e0b;color:white}
+.copy{background:#10b981;color:white;margin-top:10px}
+textarea{width:100%;height:420px;margin-top:10px;background:#020617;color:#22c55e;border-radius:10px;padding:10px;border:none;font-family:monospace}
+label{font-weight:bold;margin-top:12px;display:block}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🌊 Ocean AI Generator V4</h1>
+<p>3 Prompt Mode: Animal | Human | Hybrid</p>
+
+<div class="card">
+
+<label>Diver Outfit</label>
+<select id="outfit">
+<option value="a professional black scuba diving suit with oxygen tank and fins">Professional Scuba Suit</option>
+<option value="a tropical diving rash guard and diving shorts">Tropical Diving Outfit</option>
+<option value="a deep sea exploration suit">Deep Sea Suit</option>
+<option value="a minimalist freediving suit">Freediving Suit</option>
+</select>
+
+<label>Diver Action</label>
+<select id="action">
+<option value="slowly swimming through the ocean">Swimming</option>
+<option value="exploring an underwater canyon">Exploring Canyon</option>
+<option value="filming marine wildlife with a camera">Filming Wildlife</option>
+<option value="floating calmly in open ocean">Floating</option>
+<option value="approaching something mysterious">Approaching</option>
+</select>
+
+<label>Ocean Location</label>
+<select id="location">
+<option value="a vibrant tropical coral reef">Coral Reef</option>
+<option value="the deep blue open ocean">Open Ocean</option>
+<option value="a mysterious deep sea trench">Deep Sea Trench</option>
+<option value="a giant underwater canyon">Underwater Canyon</option>
+<option value="a crystal clear tropical lagoon">Blue Lagoon</option>
+</select>
+
+<label>Water Conditions</label>
+<select id="water">
+<option value="crystal clear tropical water">Crystal Clear</option>
+<option value="deep dark ocean water">Deep Dark</option>
+<option value="murky mysterious deep sea water">Murky Deep Sea</option>
+<option value="sunlit shallow tropical water">Sunlit Shallow</option>
+</select>
+
+<label>Marine Creature</label>
+<select id="animal"></select>
+
+<label>Creature Behavior</label>
+<select id="behavior">
+<option value="slowly emerging from the darkness">Emerging</option>
+<option value="circling curiously">Circling</option>
+<option value="gliding peacefully">Passing</option>
+<option value="approaching slowly">Approaching</option>
+<option value="swimming powerfully">Powerful Swim</option>
+</select>
+
+<label>Cinematic Camera</label>
+<select id="camera">
+<option value="a GoPro POV underwater camera">GoPro POV</option>
+<option value="an ultra wide cinematic underwater lens">Ultra Wide</option>
+<option value="a cinematic IMAX underwater camera">IMAX</option>
+<option value="a smooth underwater drone tracking shot">Drone Shot</option>
+</select>
+
+<label>Lighting</label>
+<select id="lighting">
+<option value="dramatic sunlight rays piercing the water">Sun Rays</option>
+<option value="deep mysterious ocean lighting">Deep Sea Light</option>
+<option value="bright tropical underwater lighting">Tropical Light</option>
+</select>
+
+<button class="generate" onclick="generateJSON()">Generate 3 Prompts</button>
+<button class="random" onclick="randomPrompt()">🎲 Random</button>
+
+</div>
+
+<div class="card">
+<label>Generated JSON</label>
+<textarea id="output"></textarea>
+<button class="copy" onclick="copyJSON()">Copy JSON</button>
+</div>
+
+</div>
+
+<script>
+
+let animalDB={}
+
+// LOAD EXTERNAL JSON
+fetch("animalDB.json")
+.then(res=>res.json())
+.then(data=>{
+  animalDB=data
+  const select=document.getElementById("animal")
+  Object.keys(animalDB).forEach(name=>{
+    let opt=document.createElement("option")
+    opt.value=name
+    opt.textContent=name
+    select.appendChild(opt)
+  })
+})
+
+function generateJSON(){
+
+const outfit=outfitEl.value
+const action=actionEl.value
+const location=locationEl.value
+const water=waterEl.value
+const animal=animalEl.value
+const behavior=behaviorEl.value
+const camera=cameraEl.value
+const lighting=lightingEl.value
+
+const animalDesc=animalDB[animal]
+
+// ✅ CHARACTER CONSISTENT
+const humanCharacter=`A young female ocean explorer with long flowing hair, wearing ${outfit}`
+
+// =======================
+// 1. ANIMAL ONLY
+// =======================
+const animalPrompt=`Ultra realistic cinematic underwater video of ${animalDesc} in ${location}. The environment shows ${water}. The creature is ${behavior}. Shot using ${camera}. Lighting: ${lighting}. Highly detailed marine life, cinematic scale, viral content.`
+
+// =======================
+// 2. HUMAN ONLY
+// =======================
+const humanPrompt=`Ultra realistic cinematic underwater video of ${humanCharacter}. She is ${action} in ${location}. The water is ${water}. No animals present. Focus on calm exploration, bubbles, and cinematic beauty. Shot using ${camera}. Lighting: ${lighting}.`
+
+// =======================
+// 3. HUMAN + ANIMAL
+// =======================
+const hybridPrompt=`Ultra realistic cinematic underwater video of ${humanCharacter}. She is ${action} in ${location}. The water is ${water}. Suddenly a ${animalDesc} appears. The creature is ${behavior}. Massive cinematic contrast between human and creature. Shot using ${camera}. Lighting: ${lighting}. Viral wildlife moment.`
+
+const result={
+  metadata:{
+    generator:"Ocean AI Generator V4",
+    mode:"3 Prompt System"
+  },
+  prompts:{
+    animal_only:animalPrompt,
+    human_only:humanPrompt,
+    hybrid:hybridPrompt
+  }
+}
+
+output.value=JSON.stringify(result,null,2)
+}
+
+function randomPrompt(){
+document.querySelectorAll("select").forEach(s=>{
+s.selectedIndex=Math.floor(Math.random()*s.options.length)
+})
+generateJSON()
+}
+
+function copyJSON(){
+output.select()
+document.execCommand("copy")
+alert("Copied!")
+}
+
+// SHORTCUT
+const outfitEl=document.getElementById("outfit")
+const actionEl=document.getElementById("action")
+const locationEl=document.getElementById("location")
+const waterEl=document.getElementById("water")
+const animalEl=document.getElementById("animal")
+const behaviorEl=document.getElementById("behavior")
+const cameraEl=document.getElementById("camera")
+const lightingEl=document.getElementById("lighting")
+const output=document.getElementById("output")
+
+</script>
+
+</body>
+</html>
