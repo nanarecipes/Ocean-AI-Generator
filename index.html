@@ -114,6 +114,7 @@ label{font-weight:bold;margin-top:12px;display:block}
 
 let animalDB={}
 
+// LOAD DATABASE
 fetch("animalDB.json")
 .then(res=>res.json())
 .then(data=>{
@@ -127,6 +128,7 @@ fetch("animalDB.json")
   })
 })
 
+// BASE JSON
 function baseJSON(promptText, subject, setting, creature, camera, duration, style){
 return {
 metadata:{
@@ -153,88 +155,81 @@ style:style
 }
 }
 
+// GENERATE (FIXED)
 function generate(){
 
-const outfit=outfit.value
-const action=action.value
-const location=location.value
-const water=water.value
-const animal=animalEl.value
-const behavior=behavior.value
-const camera=cameraEl.value
-const lighting=lighting.value
-const duration=durationEl.value
-const style=styleEl.value
+const outfitVal=document.getElementById("outfit").value
+const actionVal=document.getElementById("action").value
+const locationVal=document.getElementById("location").value
+const waterVal=document.getElementById("water").value
+const animalVal=document.getElementById("animal").value
+const behaviorVal=document.getElementById("behavior").value
+const cameraVal=document.getElementById("camera").value
+const lightingVal=document.getElementById("lighting").value
+const durationVal=document.getElementById("duration").value
+const styleVal=document.getElementById("style").value
 
-const animalDesc=animalDB[animal] || "a giant ocean creature"
+const animalDesc=animalDB[animalVal] || "a giant ocean creature"
 
-// CHARACTER KONSISTEN
-const human=`A young female ocean explorer wearing ${outfit}`
+// CHARACTER
+const human=`A young female ocean explorer wearing ${outfitVal}`
 
-// ====================
 // 1. ANIMAL
-// ====================
 const p1=baseJSON(
-`Ultra realistic underwater video of ${animalDesc} in ${location}. The water is ${water}. The creature is ${behavior}. Shot using ${camera}. Lighting: ${lighting}. Style: ${style}.`,
+`Ultra realistic underwater video of ${animalDesc} in ${locationVal}. The water is ${waterVal}. The creature is ${behaviorVal}. Shot using ${cameraVal}. Lighting: ${lightingVal}. Style: ${styleVal}.`,
 "Marine creature focus",
-`${location} with ${water}`,
-animal,
-camera,
-duration,
-style
+`${locationVal} with ${waterVal}`,
+animalVal,
+cameraVal,
+durationVal,
+styleVal
 )
 
-// ====================
 // 2. HUMAN
-// ====================
 const p2=baseJSON(
-`Ultra realistic underwater video of ${human}. She is ${action} in ${location}. The water is ${water}. No animals present. Shot using ${camera}. Lighting: ${lighting}. Style: ${style}.`,
+`Ultra realistic underwater video of ${human}. She is ${actionVal} in ${locationVal}. The water is ${waterVal}. No animals present. Shot using ${cameraVal}. Lighting: ${lightingVal}. Style: ${styleVal}.`,
 human,
-`${location} with ${water}`,
+`${locationVal} with ${waterVal}`,
 "No creature",
-camera,
-duration,
-style
+cameraVal,
+durationVal,
+styleVal
 )
 
-// ====================
-// 3. HYBRID (PALING VIRAL)
-// ====================
+// 3. HYBRID
 const p3=baseJSON(
-`Ultra realistic cinematic underwater video of ${human}. She is ${action} in ${location}. The water is ${water}. Suddenly a gigantic ${animal} appears. The creature is described as ${animalDesc}. The creature is ${behavior}. This creates a dramatic viral wildlife moment. Shot using ${camera}. Lighting: ${lighting}. Style: ${style}.`,
+`Ultra realistic cinematic underwater video of ${human}. She is ${actionVal} in ${locationVal}. The water is ${waterVal}. Suddenly a gigantic ${animalVal} appears. The creature is described as ${animalDesc}. The creature is ${behaviorVal}. This creates a dramatic viral wildlife moment. Shot using ${cameraVal}. Lighting: ${lightingVal}. Style: ${styleVal}.`,
 human,
-`${location} with ${water}`,
-animal,
-camera,
-duration,
-style
+`${locationVal} with ${waterVal}`,
+animalVal,
+cameraVal,
+durationVal,
+styleVal
 )
 
-out1.value=JSON.stringify(p1,null,2)
-out2.value=JSON.stringify(p2,null,2)
-out3.value=JSON.stringify(p3,null,2)
+// OUTPUT
+document.getElementById("out1").value=JSON.stringify(p1,null,2)
+document.getElementById("out2").value=JSON.stringify(p2,null,2)
+document.getElementById("out3").value=JSON.stringify(p3,null,2)
 
 }
 
+// RANDOM (FIXED)
 function randomize(){
-document.querySelectorAll("select").forEach(s=>{
+const selects=document.querySelectorAll("select")
+selects.forEach(s=>{
 s.selectedIndex=Math.floor(Math.random()*s.options.length)
 })
 generate()
 }
 
+// COPY
 function copyText(id){
 const el=document.getElementById(id)
 el.select()
 document.execCommand("copy")
 alert("Copied!")
 }
-
-// SHORTCUT
-const animalEl=document.getElementById("animal")
-const cameraEl=document.getElementById("camera")
-const durationEl=document.getElementById("duration")
-const styleEl=document.getElementById("style")
 
 </script>
 
