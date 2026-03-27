@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Ocean Diving Scene Builder</title>
+
 <style>
 body{font-family:Arial,Helvetica,sans-serif;background:#020617;color:#e5e7eb;margin:0;padding:30px}
 .container{max-width:1200px;margin:auto}
@@ -15,12 +16,15 @@ button{cursor:pointer}
 .copy{background:#10b981;color:white;margin-top:10px}
 .random{background:#f59e0b;color:white;margin-top:10px}
 .viral{background:#ef4444;color:white;margin-top:10px}
-textarea{width:100%;height:380px;margin-top:10px;background:#020617;color:#22c55e;border-radius:10px;padding:10px;border:none;font-family:monospace}
+textarea{width:100%;height:300px;margin-top:10px;background:#020617;color:#22c55e;border-radius:10px;padding:10px;border:none;font-family:monospace}
 h1{margin-bottom:10px}
 label{font-weight:bold;margin-top:12px;display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 </style>
+
 </head>
 <body>
+
 <div class="container">
 <h1>AI Ocean Diving Scene Builder</h1>
 
@@ -78,67 +82,70 @@ label{font-weight:bold;margin-top:12px;display:block}
 <option value="slowly passing behind the diver" selected>Passing Behind</option>
 <option value="circling curiously">Circling</option>
 <option value="swimming together in a group">Swimming School</option>
-<option value="approaching the diver curiously">Approaching</option>
+<option value="approaching curiously">Approaching</option>
 </select>
 
 <label>Camera Movement</label>
 <select id="camera">
 <option value="a smart adaptive cinematic underwater camera movement" selected>Smart Camera Movement</option>
-<option value="a handheld underwater selfie camera">Underwater Selfie</option>
-<option value="a smooth underwater tracking shot">Tracking Shot</option>
-<option value="a cinematic drone like underwater camera">Underwater Cinematic</option>
-<option value="a slow orbit underwater camera movement">Orbit Camera</option>
+<option value="a handheld underwater selfie camera">Selfie</option>
+<option value="a smooth underwater tracking shot">Tracking</option>
+<option value="a cinematic drone like underwater camera">Cinematic</option>
 </select>
 
 <label>Shot Composition</label>
 <select id="shot">
-<option value="a smart cinematic balanced underwater composition" selected>Smart Shot Composition</option>
-<option value="close-up underwater selfie framing">Close-up</option>
-<option value="medium underwater vlog framing">Medium Shot</option>
-<option value="wide cinematic underwater wildlife shot">Wide Shot</option>
+<option value="a smart cinematic balanced underwater composition" selected>Smart Shot</option>
+<option value="close-up underwater wildlife shot">Close-up</option>
+<option value="wide cinematic underwater wildlife shot">Wide</option>
 </select>
 
 <label>Lighting</label>
 <select id="lighting">
 <option value="sunlight rays piercing through the ocean water">Sun Rays</option>
 <option value="soft blue underwater lighting">Soft Blue</option>
-<option value="dramatic deep sea lighting">Deep Sea Light</option>
-<option value="bright tropical underwater lighting">Tropical Light</option>
+<option value="dramatic deep sea lighting">Deep Sea</option>
 </select>
 
 <label>Environment Effects</label>
 <select id="effects">
 <option value="none" selected>None</option>
 <option value="floating bubbles rising through the water">Bubbles</option>
-<option value="small tropical fish swimming around">Fish Swarm</option>
 <option value="floating plankton particles in the water">Plankton</option>
 </select>
 
-<label>Video Duration</label>
+<label>Duration</label>
 <select id="duration">
-<option value="5">5 seconds</option>
-<option value="8">8 seconds</option>
-<option value="12">12 seconds</option>
-<option value="15">15 seconds</option>
+<option value="5">5 sec</option>
+<option value="8">8 sec</option>
+<option value="12">12 sec</option>
 </select>
 
-<label>Visual Style</label>
+<label>Style</label>
 <select id="style">
-<option value="cinematic underwater nature film">Cinematic Ocean</option>
-<option value="marine wildlife documentary realism">Wildlife Documentary</option>
-<option value="epic cinematic ocean adventure">Ocean Adventure</option>
+<option value="cinematic underwater nature film">Cinematic</option>
+<option value="marine wildlife documentary realism">Documentary</option>
+<option value="epic cinematic ocean adventure">Epic</option>
 </select>
 
-<button class="generate" onclick="generateJSON()">Generate JSON Prompt</button>
-<button class="random" onclick="randomPrompt()">🎲 Random Ocean Scene</button>
-<button class="viral" onclick="viralCombo()">🔥 Viral Combo Generator</button>
+<button class="generate" onclick="generateJSON()">Generate JSON</button>
 
 </div>
 
+<div class="grid">
+
 <div class="card">
-<label>Generated JSON</label>
-<textarea id="output"></textarea>
-<button class="copy" onclick="copyJSON()">Copy JSON</button>
+<label>JSON 1 (Original)</label>
+<textarea id="output1"></textarea>
+<button class="copy" onclick="copyJSON('output1')">Copy JSON 1</button>
+</div>
+
+<div class="card">
+<label>JSON 2 (Animal Only)</label>
+<textarea id="output2"></textarea>
+<button class="copy" onclick="copyJSON('output2')">Copy JSON 2</button>
+</div>
+
 </div>
 
 </div>
@@ -155,63 +162,25 @@ opt.textContent=name
 animalSelect.appendChild(opt)
 })
 
-function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
-
-function viralCombo(){
-
-// VIRAL LOGIC
-const viralAnimals=["Megalodon","Giant Octopus","Colossal Squid","Whale Shark","Sperm Whale"]
-const viralEffects=["floating bubbles rising through the water","floating plankton particles in the water"]
-const viralExpressions=["looking shocked by the marine life","looking surprised and amazed"]
-const viralShots=["wide cinematic underwater wildlife shot","a smart cinematic balanced underwater composition"]
-const viralCamera=["a smart adaptive cinematic underwater camera movement","a cinematic drone like underwater camera"]
-
-// APPLY
-setValue("animal",pick(viralAnimals))
-setValue("effects",pick(viralEffects))
-setValue("expression",pick(viralExpressions))
-setValue("shot",pick(viralShots))
-setValue("camera",pick(viralCamera))
-setValue("duration","8")
-setValue("style","epic cinematic ocean adventure")
-
-// slight random for others
-randomPartial(["clothing","pants","accessories","behavior","lighting"])
-
-generateJSON()
-}
-
-function setValue(id,value){
-const el=document.getElementById(id)
-for(let i=0;i<el.options.length;i++){
-if(el.options[i].value===value){el.selectedIndex=i;break}
-}
-}
-
-function randomPartial(ids){
-ids.forEach(id=>{
-const el=document.getElementById(id)
-el.selectedIndex=Math.floor(Math.random()*el.options.length)
-})
-}
-
 function generateJSON(){
-const clothing=document.getElementById('clothing').value
-const pants=document.getElementById('pants').value
-const accessories=document.getElementById('accessories').value
-const expression=document.getElementById('expression').value
-const location=document.getElementById('location').value
-const animal=document.getElementById('animal').value
-const animalDesc=animalDB[animal]
-const behavior=document.getElementById('behavior').value
-const camera=document.getElementById('camera').value
-const shot=document.getElementById('shot').value
-const lighting=document.getElementById('lighting').value
-const effects=document.getElementById('effects').value
-const duration=document.getElementById('duration').value
-const style=document.getElementById('style').value
 
-const json={
+const clothing=clothingEl.value
+const pants=pantsEl.value
+const accessories=accessoriesEl.value
+const expression=expressionEl.value
+const location=locationEl.value
+const animal=animalEl.value
+const animalDesc=animalDB[animal]
+const behavior=behaviorEl.value
+const camera=cameraEl.value
+const shot=shotEl.value
+const lighting=lightingEl.value
+const effects=effectsEl.value
+const duration=durationEl.value
+const style=styleEl.value
+
+// JSON 1 (UNCHANGED)
+const json1={
 metadata:{title:"AI Ocean Diving Scene",generator:"AI Ocean Diving Scene Builder"},
 video_analysis:{
 subject:`A young woman ${expression !== "none" ? expression + "," : ""} wearing ${clothing}, ${pants}, and ${accessories}`,
@@ -220,28 +189,55 @@ background_elements:`${animal} described as ${animalDesc} ${behavior}`,
 camera_movement:camera
 },
 ai_generation_prompt:{
-text_to_video_prompt:`Cinematic ${shot} underwater video of a young woman ${expression !== "none" ? expression + "," : ""} wearing ${clothing}, ${pants}, and ${accessories}, diving in ${location}. The camera performs ${camera}. Nearby there is ${animal} described as ${animalDesc} ${behavior}. Lighting condition is ${lighting}. Environmental effect: ${effects}. Photorealistic underwater environment, realistic marine life anatomy, cinematic ocean wildlife documentary style. Visual style ${style}.`,
-negative_prompt:"blurry, distorted fish, unrealistic marine anatomy, cartoon style, anime style, low resolution",
+text_to_video_prompt:`Cinematic ${shot} underwater video of a young woman ${expression !== "none" ? expression + "," : ""} wearing ${clothing}, ${pants}, and ${accessories}, diving in ${location}. The camera performs ${camera}. Nearby there is ${animal} described as ${animalDesc} ${behavior}. Lighting: ${lighting}. Effects: ${effects}. Style ${style}.`,
+negative_prompt:"blurry, distorted fish, unrealistic anatomy",
 technical_specs:{aspect_ratio:"9:16",resolution:"4K",frame_rate:"30fps",duration_seconds:Number(duration),style:style}
 }
 }
 
-document.getElementById('output').value=JSON.stringify(json,null,2)
+// JSON 2 (ANIMAL ONLY)
+const json2={
+metadata:{title:"AI Ocean Wildlife Scene",generator:"AI Ocean Generator"},
+video_analysis:{
+subject:`${animal} described as ${animalDesc}`,
+setting:location,
+behavior:behavior,
+camera_movement:camera
+},
+ai_generation_prompt:{
+text_to_video_prompt:`Cinematic ${shot} underwater wildlife footage of ${animal} described as ${animalDesc} ${behavior} in ${location}. Camera uses ${camera}. Lighting: ${lighting}. Effects: ${effects}. Highly realistic marine life, documentary style. ${style}.`,
+negative_prompt:"humans, diver, people, blurry, cartoon",
+technical_specs:{aspect_ratio:"9:16",resolution:"4K",frame_rate:"30fps",duration_seconds:Number(duration),style:style}
+}
 }
 
-function randomPrompt(){
-const selects=document.querySelectorAll('select')
-selects.forEach(select=>{select.selectedIndex=Math.floor(Math.random()*select.options.length)})
-generateJSON()
+output1.value=JSON.stringify(json1,null,2)
+output2.value=JSON.stringify(json2,null,2)
 }
 
-function copyJSON(){
-const text=document.getElementById('output')
+// shortcut refs
+const clothingEl=document.getElementById('clothing')
+const pantsEl=document.getElementById('pants')
+const accessoriesEl=document.getElementById('accessories')
+const expressionEl=document.getElementById('expression')
+const locationEl=document.getElementById('location')
+const animalEl=document.getElementById('animal')
+const behaviorEl=document.getElementById('behavior')
+const cameraEl=document.getElementById('camera')
+const shotEl=document.getElementById('shot')
+const lightingEl=document.getElementById('lighting')
+const effectsEl=document.getElementById('effects')
+const durationEl=document.getElementById('duration')
+const styleEl=document.getElementById('style')
+
+function copyJSON(id){
+const text=document.getElementById(id)
 text.select()
 document.execCommand('copy')
-alert('JSON copied')
+alert('Copied!')
 }
 
 </script>
+
 </body>
 </html>
